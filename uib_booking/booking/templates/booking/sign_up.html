@@ -1,0 +1,57 @@
+{% load widget_tweaks %}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign Up - UIB Booking System</title>
+  <link rel="icon" href="{% static 'img/logo.png' %}" type="image/png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-white min-h-screen flex items-center justify-center px-6">
+
+  <div class="w-full max-w-md bg-white bg-opacity-90 p-10 rounded-3xl shadow-lg">
+    <h2 class="text-4xl font-extrabold text-blue-900 mb-8 text-center">
+      Create a New Account
+    </h2>
+
+    {% if form.non_field_errors %}
+      <div role="alert" class="mb-6 p-4 bg-red-100 border border-red-300 text-red-700 rounded">
+        {{ form.non_field_errors }}
+      </div>
+    {% endif %}
+
+    <form method="post" class="space-y-6" novalidate>
+      {% csrf_token %}
+
+      {% for field in form %}
+        <div>
+          <label for="{{ field.id_for_label }}" class="block mb-2 font-semibold text-gray-700">
+            {{ field.label }}{% if field.field.required %} <span aria-hidden="true" class="text-red-600">*</span>{% endif %}
+          </label>
+          {{ field|add_class:"w-full border border-gray-300 rounded-xl px-4 py-3 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600" }}
+          {% if field.help_text %}
+            <small class="text-gray-500">{{ field.help_text }}</small>
+          {% endif %}
+          {% if field.errors %}
+            <p role="alert" class="text-red-600 mt-1 text-sm">{{ field.errors|striptags }}</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      <button type="submit"
+        class="w-full bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition duration-300 font-semibold shadow-md">
+        Sign Up
+      </button>
+    </form>
+
+    <p class="mt-8 text-center text-gray-700">
+      Already have an account? 
+      <a href="{% url 'login' %}" class="text-blue-600 hover:underline font-semibold">Log in here</a>
+    </p>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="{% static 'img/logo.png' %}" type="image/png" />
+    <title>My Profile - UIB Booking System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-white min-h-screen flex items-center justify-center p-6 text-gray-800 relative">
+
+    <div class="bg-white rounded-[2.5rem] border-4 border-blue-100 shadow-2xl p-10 w-full max-w-lg text-center space-y-6">
+
+        <h2 class="text-3xl font-extrabold text-blue-900">Profil Saya</h2>
+
+        <div>
+            {% if profile.profile_image %}
+                <img src="{{ profile.profile_image.url }}" 
+                     alt="Foto Profil" 
+                     class="w-28 h-28 mx-auto rounded-full object-cover ring-4 ring-blue-200 shadow" />
+            {% else %}
+                <div class="w-28 h-28 mx-auto rounded-full bg-gray-300 flex items-center justify-center text-gray-600 text-sm font-semibold shadow">
+                    No Image
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="space-y-2 text-left">
+            <p><span class="font-semibold text-blue-800">Nama Lengkap:</span> {{ profile.full_name }}</p>
+            <p><span class="font-semibold text-blue-800">Email:</span> {{ request.user.email }}</p>
+        </div>
+
+        <a href="{% url 'profile_edit' %}" 
+           class="inline-block mt-4 px-6 py-3 bg-blue-600 text-white rounded-full font-semibold shadow hover:bg-blue-700 transition">
+            Edit Profil
+        </a>
+    </div>
+
+    <!-- Optional Background Blur -->
+    <div class="absolute -z-10 bottom-0 right-0 w-96 h-96 bg-blue-200 rounded-full opacity-30 blur-[80px]"></div>
+
+</body>
+</html>

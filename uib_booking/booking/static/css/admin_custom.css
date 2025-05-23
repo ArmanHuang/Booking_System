@@ -1,0 +1,99 @@
+/* BASE */
+body, html {
+  background: linear-gradient(to bottom right, #f0f4f8, #ffffff) !important;
+  color: #111827 !important; 
+  font-family: 'Inter', sans-serif;
+}
+
+/* HEADER */
+#header {
+  background-color: #3b82f6 !important; /* Soft blue */
+  color: white !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+#header h1, #header a, #user-tools {
+  color: white !important;
+}
+
+/* SIDEBAR */
+#sidebar {
+  background-color: #e0f2fe !important; /* Soft light blue */
+  color: #111827 !important;
+  border-right: 1px solid #cbd5e1;
+}
+
+#sidebar .module a {
+  color: #2563eb !important;
+  font-weight: 500;
+}
+
+#sidebar .module a:hover {
+  color: #1d4ed8 !important;
+  text-decoration: underline;
+}
+
+/* BUTTONS */
+input[type=submit], .button {
+  background-color: #3b82f6 !important; 
+  border: none !important;
+  color: white !important;
+  font-weight: 600;
+  border-radius: 0.5rem !important;
+  padding: 0.5rem 1.25rem !important;
+  transition: background-color 0.3s ease;
+}
+
+input[type=submit]:hover, .button:hover {
+  background-color: #2563eb !important;
+}
+
+/* TAMBAH BUTTON */
+a.addlink {
+  background-color: #bfdbfe !important; 
+  color: #1e3a8a !important;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+a.addlink:hover {
+  background-color: #60a5fa !important;
+  color: white !important;
+}
+
+/* AUTH DROPDOWN */
+.app-auth > summary {
+  background-color: #f1f5f9;
+  color: #1e3a8a;
+  font-weight: 600;
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.app-auth ul li a {
+  color: #3b82f6;
+}
+
+.app-auth ul li a:hover {
+  background-color: #60a5fa;
+  color: white;
+  border-radius: 4px;
+}
+#sidebar summary {
+  background-color: #e0f2fe !important; /* Light blue */
+  color: #1e3a8a !important;           /* Dark blue text */
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+#sidebar summary:hover {
+  background-color: #bae6fd !important;
+  color: #1e40af !important;
+}

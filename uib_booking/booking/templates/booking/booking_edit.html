@@ -1,0 +1,159 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="{% static 'img/logo.png' %}" type="image/png" />
+  <title>Edit Meeting Room Booking - UIB Booking System</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-white min-h-screen text-gray-800 relative p-6">
+
+  <!-- Container luar tanpa max-h-screen dan overflow-auto, biar scroll hanya di body -->
+  <div class="flex justify-center items-start pt-10 px-4 min-h-screen">
+
+    <!-- Form container tanpa scroll internal -->
+    <div class="w-full max-w-lg bg-white rounded-[2.5rem] shadow-2xl border-4 border-blue-100 p-10">
+      <h2 class="text-3xl font-extrabold text-blue-900 mb-8 text-center">
+        Edit Meeting Room Booking
+      </h2>
+
+      {% if messages %}
+        <div class="mb-6">
+          {% for message in messages %}
+            <p class="text-center text-sm text-red-600 italic" role="alert">{{ message }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <form method="post" class="space-y-6" novalidate>
+        {% csrf_token %}
+
+        <div>
+          <label for="room" class="block mb-2 font-semibold text-blue-800">Room:</label>
+          <select id="room" name="room" required
+            class="w-full border border-blue-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-4 focus:ring-blue-300"
+            aria-describedby="roomHelp">
+            {% for room in rooms %}
+              <option 
+                value="{{ room.id }}" 
+                data-image-url="{% if room.image %}{{ room.image.url }}{% endif %}"
+                {% if room.id == selected_booking.room.id %}selected{% endif %}>
+                {{ room.name }} - {{ room.location }}
+              </option>
+            {% endfor %}
+          </select>
+          <p id="roomHelp" class="text-xs text-blue-600 mt-1 italic">Select a meeting room to see its image below.</p>
+          <div class="mt-6 text-center">
+            {% if selected_booking.room.image %}
+              <img id="room-image" 
+                src="{{ selected_booking.room.image.url }}" 
+                alt="Image of {{ selected_booking.room.name }}" 
+                class="mx-auto max-h-52 rounded-[1.5rem] shadow-md object-cover" />
+              <div id="room-image-placeholder" style="display:none;" 
+                class="mx-auto max-h-52 rounded-[1.5rem] shadow-md bg-blue-100 flex items-center justify-center text-blue-300 font-semibold text-sm w-full h-52">
+                No Image Available
+              </div>
+            {% else %}
+              <img id="room-image" style="display:none;" 
+                class="mx-auto max-h-52 rounded-[1.5rem] shadow-md object-cover" />
+              <div id="room-image-placeholder" 
+                class="mx-auto max-h-52 rounded-[1.5rem] shadow-md bg-blue-100 flex items-center justify-center text-blue-300 font-semibold text-sm w-full h-52">
+                No Image Available
+              </div>
+            {% endif %}
+          </div>
+        </div>
+
+        <div>
+          <label for="date" class="block mb-2 font-semibold text-blue-800">Date:</label>
+          <input type="date" id="date" name="date" required
+            class="w-full border border-blue-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-4 focus:ring-blue-300"
+            aria-describedby="dateHelp"
+            value="{{ selected_booking.date }}">
+          <p id="dateHelp" class="text-xs text-blue-600 mt-1 italic">Select the booking date (from today onwards).</p>
+        </div>
+
+        <div>
+          <label for="start_time" class="block mb-2 font-semibold text-blue-800">Start Time:</label>
+          <input type="time" id="start_time" name="start_time" required
+            class="w-full border border-blue-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-4 focus:ring-blue-300"
+            value="{{ selected_booking.start_time }}">
+        </div>
+
+        <div>
+          <label for="end_time" class="block mb-2 font-semibold text-blue-800">End Time:</label>
+          <input type="time" id="end_time" name="end_time" required
+            class="w-full border border-blue-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-4 focus:ring-blue-300"
+            value="{{ selected_booking.end_time }}">
+        </div>
+
+        <div>
+          <label for="purpose" class="block mb-2 font-semibold text-blue-800">Purpose:</label>
+          <textarea id="purpose" name="purpose" rows="4" required
+            class="w-full border border-blue-300 rounded-xl px-4 py-3 focus:outline-none focus:ring-4 focus:ring-blue-300"
+            placeholder="Describe the purpose of your booking">{{ selected_booking.purpose }}</textarea>
+        </div>
+
+        <button type="submit"
+          class="w-full bg-blue-600 text-white font-extrabold py-4 rounded-[2rem] hover:bg-blue-700 transition duration-300 focus:outline-none focus:ring-6 focus:ring-blue-400">
+          Save Changes
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+  <script>
+    const roomSelect = document.getElementById('room');
+    const roomImage = document.getElementById('room-image');
+    const placeholder = document.getElementById('room-image-placeholder');
+
+    function updateRoomDetails() {
+      const selectedOption = roomSelect.options[roomSelect.selectedIndex];
+      const imgUrl = selectedOption.getAttribute('data-image-url');
+
+      if (imgUrl) {
+        roomImage.src = imgUrl;
+        roomImage.style.display = 'block';
+        if (placeholder) placeholder.style.display = 'none';
+      } else {
+        roomImage.style.display = 'none';
+        if (placeholder) placeholder.style.display = 'flex';
+      }
+    }
+
+    roomSelect.addEventListener('change', updateRoomDetails);
+    updateRoomDetails();
+
+    // Set min date to today
+    const dateInput = document.getElementById('date');
+    const today = new Date().toISOString().split('T')[0];
+    dateInput.min = today;
+
+    // Validate end time > start time (support crossing midnight)
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function(e) {
+      const startTime = document.getElementById('start_time').value;
+      const endTime = document.getElementById('end_time').value;
+      if (startTime && endTime) {
+        const [sh, sm] = startTime.split(':').map(Number);
+        const [eh, em] = endTime.split(':').map(Number);
+        let startMinutes = sh * 60 + sm;
+        let endMinutes = eh * 60 + em;
+        // Jika end < start, anggap crossing midnight -> tambahkan 24 jam ke end
+        if (endMinutes <= startMinutes) {
+          endMinutes += 24 * 60;
+        }
+        if (endMinutes <= startMinutes) {
+          e.preventDefault();
+          alert("End Time must be later than Start Time.");
+        }
+      }
+    });
+  </script>
+
+  <div class="absolute -z-10 bottom-0 right-0 w-96 h-96 bg-blue-200 rounded-full opacity-30 blur-[80px]"></div>
+</body>
+</html>

@@ -1,0 +1,64 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>UIB Booking System</title>
+  <link rel="icon" href="{% static 'img/logo.png' %}" type="image/png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-white min-h-screen flex items-center justify-center text-gray-800 relative overflow-hidden">
+
+ 
+
+  <div class="w-full max-w-7xl flex flex-col md:flex-row items-center justify-between px-8 py-16 z-10">
+    <!-- Left Content -->
+    <div class="w-full md:w-1/2 mb-12 md:mb-0">
+      <h1 class="text-4xl md:text-5xl font-extrabold text-blue-900 leading-tight mb-4">
+        Welcome to<br><span class="text-blue-600">UIB Booking System</span>
+      </h1>
+      <p class="text-lg text-gray-600 mb-6 italic">"Book your space, own your time."</p>
+
+      {% if user.is_authenticated %}
+        <p class="mb-4 text-lg">Hello, <span class="font-semibold">{{ user.username }}</span>!</p>
+        <div class="flex gap-4 flex-wrap">
+          {% if user.is_staff %}
+            <a href="/admin/" class="px-6 py-3 bg-blue-600 text-white rounded-full shadow hover:bg-blue-700 transition">
+              Admin Dashboard
+            </a>
+          {% else %}
+            <form method="get" action="{% url 'user_dashboard' %}">
+              <button type="submit" class="px-6 py-3 bg-blue-600 text-white rounded-full shadow hover:bg-blue-700 transition">
+                Dashboard
+              </button>
+            </form>
+          {% endif %}
+          <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="px-6 py-3 bg-red-600 text-white rounded-full shadow hover:bg-red-700 transition">
+              Logout
+            </button>
+          </form>
+        </div>
+      {% else %}
+        <a href="{% url 'login' %}" class="mt-6 inline-block px-6 py-3 bg-blue-600 text-white rounded-full shadow hover:bg-blue-700 transition">
+          Sign In
+        </a>
+      {% endif %}
+    </div>
+
+    <div class="w-full md:w-1/2 flex justify-center items-center relative">
+      <div class="p-4 bg-white rounded-[2.5rem] shadow-2xl border-4 border-blue-100 transform hover:scale-105 transition duration-500 ease-in-out">
+        <img src="{% static 'img/org.png' %}" 
+             alt="Room Booking" 
+             class="w-[320px] md:w-[500px] h-auto rounded-[2rem] object-cover" />
+      </div>
+      <div class="absolute -z-10 bottom-0 right-0 w-96 h-96 bg-blue-200 rounded-full opacity-30 blur-[80px]"></div>
+    </div>
+  </div>
+    
+  
+
+</body>
+</html>

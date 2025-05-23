@@ -1,0 +1,8 @@
+td.field-facilities ol {
+    margin: 0;
+    padding-left: 18px;
+}
+
+td.field-facilities ol li {
+    white-space: normal; 
+}
