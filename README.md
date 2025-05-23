@@ -1,4 +1,4 @@
-# Room Booking System - International University of Batam
+# Room Booking System 
 
 This project is a **Room Booking System** built using the **Django Framework** for managing room reservations at the **International University of Batam (UIB)**.
 
